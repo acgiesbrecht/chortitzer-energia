@@ -1,22 +1,61 @@
-<ion-header>
+<!--<ion-header>
   <ion-toolbar>
     <ion-title>Consulta de Exoneracion</ion-title>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
-
+</ion-header>-->
 <ion-content>
-  <form [formGroup]="nisForm" (ngSubmit)="formSubmit()">
-    <ion-list lines="full">
-      <ion-item>
-        <ion-img [src]="../../../assets/icons/icon-152x152.png"></ion-img>
-      </ion-item>
-      <ion-item class="form">
-        <ion-label position="floating">NIS</ion-label>
-        <ion-input formControlName="nis" type="text" mask="0000-0000"></ion-input>
-      </ion-item>
-    </ion-list>
+  <form [formGroup]="nisForm" (ngSubmit)="buscar()">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="3"></ion-col>
+        <ion-col class="ion-img-center" size="6">
+          <ion-img style="width: 144px; height: 144px;" src="../../../assets/icons/icon-512x512.png"></ion-img>
+        </ion-col>
+        <ion-col size="3"></ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center">
+          <ion-text>
+            Consulta de Exoneracion
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center" size="2"></ion-col>
+        <ion-col class="ion-text-center">
+          <ion-item border-color="#14AC52">
+            <ion-input formControlName="nis" background="secondary" autofocus="true" minlength="9" maxlength="9"
+              size="9" type="text" placeholder="NIS" required>
+            </ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col class="ion-text-center" size="2"></ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center">
+          <ion-button type="submit" color="secondary" size="large">Buscar</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center">
+
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center" size="2"></ion-col>
+        <ion-col class="ion-text-center">
+          <ion-card *ngIf="hasRespuesta">
+            <ion-text>
+              <h3>{{respuesta}}</h3>
+            </ion-text>
+          </ion-card>
+        </ion-col>
+        <ion-col class="ion-text-center" size="2"></ion-col>
+      </ion-row>
+    </ion-grid>
+
   </form>
 </ion-content>
