@@ -2,12 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from "@angular/forms";
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
-export interface Consumo {
-  nis: string,
-  consumo: number,
-  mes: number;
-}
+import { Movimiento } from '../../models/movimiento';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -16,14 +12,15 @@ export interface Consumo {
 })
 export class HomePage implements OnInit {
   nisForm: FormGroup;
-  private consumosCollection: AngularFirestoreCollection<Consumo>;
-  consumos: Observable<Consumo[]>;
-  consumoNis: number;
+  private movimientosCollection: AngularFirestoreCollection<Movimiento>;
+  movimientos: Observable<Movimiento[]>;
+  nisActual: Movimiento;
   respuesta: string;
   hasRespuesta: boolean;
 
   constructor(public formBuilder: FormBuilder,
-    private db: AngularFirestore) {
+    private db: AngularFirestore,
+    public loadingController: LoadingController) {
   }
 
   ngOnInit() {
@@ -34,30 +31,48 @@ export class HomePage implements OnInit {
   }
 
   buscar() {
+    this.presentLoading();
     this.respuesta = "";
-    this.consumoNis = undefined;
+    this.nisActual = undefined;
     this.hasRespuesta = false;
     if (!this.nisForm.valid) {
       return false;
     } else {
-      this.consumosCollection = this.db.collection<Consumo>('consumos', ref => ref.where('nis', '==', this.nisForm.value.nis));
-      this.consumos = this.consumosCollection.valueChanges();
-      this.consumos.subscribe(d => {
+      this.movimientosCollection = this.db.collection<Movimiento>('movimientos', ref =>
+        ref.where('nis', '==', this.nisForm.value.nis));
+      this.movimientos = this.movimientosCollection.valueChanges();
+      this.movimientos.subscribe(d => {
         d.forEach(doc => {
-          this.consumoNis = doc.consumo;
+          this.nisActual = doc;
         });
         this.hasRespuesta = true;
-        if (this.consumoNis == undefined) {
+        if (this.nisActual == undefined) {
           this.respuesta = "NIS no ecnontrado";
         } else {
-          if (this.consumoNis > 500) {
-            this.respuesta = "NIS no exonerado por tener un consumo de " + this.consumoNis.toString() + " kWh"
+          if (this.nisActual.categoria.includes('BT')) {
+            if (this.nisActual.consumo > 500) {
+              this.respuesta = "NIS no exonerado por tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
+            } else {
+              this.respuesta = "NIS exonerado por ser cliente en Baja Tension y tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
+            }
           } else {
-            this.respuesta = "NIS exonerado por tener un consumo de " + this.consumoNis.toString() + " kWh"
+            this.respuesta = "NIS no exonerado por no ser cliente en Baja Tension";
           }
         }
+        this.dismissLoading();
       });
-
     }
+    this.dismissLoading();
+  }
+
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Buscando...',
+    });
+    await loading.present();
+  }
+
+  async dismissLoading() {
+    const loading = await this.loadingController.dismiss();
   }
 }
