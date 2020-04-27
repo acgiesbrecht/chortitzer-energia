@@ -27,6 +27,7 @@
     "@ionic/angular": "^5.0.7",
     "core-js": "^2.5.4",
     "firebase": "^7.14.2",
+    "ngx-mask": "^9.0.2",
     "ngx-mask-ionic": "^1.1.2",
     "ngx-papaparse": "^4.0.4",
     "rxjs": "~6.5.1",
