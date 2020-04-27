@@ -4,6 +4,8 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { Observable } from 'rxjs';
 import { Movimiento } from '../../models/movimiento';
 import { LoadingController } from '@ionic/angular';
+import { Papa } from 'ngx-papaparse';
+import { Http, Response } from '@angular/http';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +15,22 @@ import { LoadingController } from '@ionic/angular';
 export class HomePage implements OnInit {
   nisForm: FormGroup;
   private movimientosCollection: AngularFirestoreCollection<Movimiento>;
-  movimientos: Observable<Movimiento[]>;
+  movimientos: Movimiento[];
+  csvData: any[] = [];
+  headerRow: any[] = [];
   nisActual: Movimiento;
   respuesta: string;
+  periodo: string;
   hasRespuesta: boolean;
+  notFound: boolean;
+  responseColor: string;
+  notValid: boolean;
 
   constructor(public formBuilder: FormBuilder,
     private db: AngularFirestore,
-    public loadingController: LoadingController) {
+    public loadingController: LoadingController,
+    private papa: Papa,
+    private http: Http) {
   }
 
   ngOnInit() {
@@ -28,51 +38,94 @@ export class HomePage implements OnInit {
       nis: ['', [Validators.required]],
     })
     this.hasRespuesta = false;
+    this.http.get('../../assets/movs-abril-exoneracion.csv')
+      .subscribe(
+        data => this.extractData(data),
+        err => console.log(err)
+      );
   }
 
   buscar() {
-    this.presentLoading();
+    this.notValid = false;
     this.respuesta = "";
+    this.periodo = "";
     this.nisActual = undefined;
     this.hasRespuesta = false;
+    this.notFound = false;
     if (!this.nisForm.valid) {
-      return false;
+      this.notValid = true;
     } else {
-      this.movimientosCollection = this.db.collection<Movimiento>('movimientos', ref =>
+      //this.presentLoading();
+
+      for (let item of this.csvData) {
+        if (item[0] != undefined && item[1] != undefined && item[2] != undefined && item[3] != undefined) {
+          if (item[0] == this.nisForm.value.nis) {
+            this.nisActual = <Movimiento>{
+              nis: item[0],
+              categoria: item[1],
+              consumo: item[2],
+              mes: item[3]
+            };
+          }
+        }
+      }
+
+      /*this.movimientosCollection = this.db.collection<Movimiento>('movimientos', ref =>
         ref.where('nis', '==', this.nisForm.value.nis));
       this.movimientos = this.movimientosCollection.valueChanges();
       this.movimientos.subscribe(d => {
         d.forEach(doc => {
           this.nisActual = doc;
-        });
+        });*/
+      if (this.nisActual == undefined) {
+        this.respuesta = "NIS no ecnontrado";
+        this.responseColor = "danger";
+        this.notFound = true;
+      } else {
         this.hasRespuesta = true;
-        if (this.nisActual == undefined) {
-          this.respuesta = "NIS no ecnontrado";
-        } else {
-          if (this.nisActual.categoria.includes('BT')) {
-            if (this.nisActual.consumo > 500) {
-              this.respuesta = "NIS no exonerado por tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
-            } else {
-              this.respuesta = "NIS exonerado por ser cliente en Baja Tension y tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
-            }
+        if (this.nisActual.categoria.includes('BT')) {
+          if (this.nisActual.consumo > 500) {
+            this.respuesta = "NIS no exonerado por tener un consumo de " + this.nisActual.consumo.toString() + " kWh";
+            this.responseColor = "danger";
+            this.periodo = "Periodo " + this.nisActual.mes;
           } else {
-            this.respuesta = "NIS no exonerado por no ser cliente en Baja Tension";
+            this.respuesta = "NIS exonerado por ser cliente en Baja Tension y tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
+            this.responseColor = "success";
+            this.periodo = "Periodo " + this.nisActual.mes;
           }
+        } else {
+          this.respuesta = "NIS no exonerado por no ser cliente en Baja Tension";
+          this.responseColor = "danger";
+          this.periodo = "Periodo " + this.nisActual.mes;
         }
-        this.dismissLoading();
-      });
+      }
+      //this.dismissLoading();
     }
-    this.dismissLoading();
+    //this.dismissLoading();
   }
 
-  async presentLoading() {
+  private async presentLoading() {
     const loading = await this.loadingController.create({
       message: 'Buscando...',
     });
     await loading.present();
   }
 
-  async dismissLoading() {
+  private async dismissLoading() {
     const loading = await this.loadingController.dismiss();
+  }
+
+  private extractData(res) {
+    let csvData = res['_body'] || '';
+
+    this.papa.parse(csvData, {
+      complete: parsedData => {
+        this.headerRow = parsedData.data.splice(0, 1)[0];
+        this.csvData = parsedData.data;
+      },
+      dynamicTyping: true
+    });
+
+    //console.log(this.csvData);
   }
 }

@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NgxMaskIonicModule } from 'ngx-mask-ionic';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { NgxMaskIonicModule } from 'ngx-mask-ionic';
     FormsModule,
     IonicModule,
     NgxMaskIonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    HttpModule
   ],
   declarations: [HomePage]
 })

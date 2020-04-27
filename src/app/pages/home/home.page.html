@@ -19,16 +19,18 @@
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center">
           <ion-text>
-            Consulta de Exoneracion
+            <h3>Consulta de Exoneracion</h3>
           </ion-text>
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center" size="2"></ion-col>
         <ion-col class="ion-text-center">
-          <ion-item border-color="#14AC52">
-            <ion-input formControlName="nis" background="secondary" autofocus="true" minlength="9" maxlength="9"
-              size="9" type="text" placeholder="NIS" required>
+          <ion-label position="floating">NIS (Numero del medidor)</ion-label>
+          <ion-item class="nis" color="secundary">
+            <ion-input formControlName="nis" autofocus="true" minlength="9" maxlength="9" size="9" inputmode="tel"
+              type="text" placeholder="0000-0000" required
+              pattern="([0-9])([0-9])([0-9])([0-9])-([0-9])([0-9])([0-9])([0-9])+">
             </ion-input>
           </ion-item>
         </ion-col>
@@ -45,15 +47,29 @@
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
-        <ion-col class="ion-text-center" size="2"></ion-col>
+        <ion-col class="ion-text-center" size="1"></ion-col>
         <ion-col class="ion-text-center">
           <ion-card *ngIf="hasRespuesta">
-            <ion-text>
+            <ion-text color={{responseColor}}>
+              <h3>{{respuesta}}</h3>
+              <h4>{{periodo}}</h4>
+              <h4>Decreto N° 3506/20 Art. 26</h4>
+            </ion-text>
+          </ion-card>
+          <ion-card *ngIf="notFound">
+            <ion-text color={{responseColor}}>
               <h3>{{respuesta}}</h3>
             </ion-text>
           </ion-card>
+          <ion-card *ngIf="notValid">
+            <ion-text color="danger">
+              <h3>NIS no valido</h3>
+              <h5>Formato requerido: XXXX-XXXX. Si el numero de medidor tiene solo XXX-XXX entonces anteponer un digito
+                segun zona: Zona norte: 0XXX-0XXX y zona sur: 6XXX-0XXX</h5>
+            </ion-text>
+          </ion-card>
         </ion-col>
-        <ion-col class="ion-text-center" size="2"></ion-col>
+        <ion-col class="ion-text-center" size="1"></ion-col>
       </ion-row>
     </ion-grid>
 
