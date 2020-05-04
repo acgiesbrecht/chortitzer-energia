@@ -7,6 +7,12 @@ import { LoadingController } from '@ionic/angular';
 import { Papa } from 'ngx-papaparse';
 import { Http, Response } from '@angular/http';
 
+export interface MovimientoExoneracion {
+  movimiento: Movimiento,
+  exonerado: string,
+  color: string
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -19,11 +25,9 @@ export class HomePage implements OnInit {
   csvData: any[] = [];
   headerRow: any[] = [];
   nisActual: Movimiento;
-  respuesta: string;
-  periodo: string;
+  respuestaMovimiento: MovimientoExoneracion;
   hasRespuesta: boolean;
   notFound: boolean;
-  responseColor: string;
   notValid: boolean;
 
   constructor(public formBuilder: FormBuilder,
@@ -47,8 +51,7 @@ export class HomePage implements OnInit {
 
   buscar() {
     this.notValid = false;
-    this.respuesta = "";
-    this.periodo = "";
+    this.respuestaMovimiento = undefined;
     this.nisActual = undefined;
     this.hasRespuesta = false;
     this.notFound = false;
@@ -56,6 +59,11 @@ export class HomePage implements OnInit {
       this.notValid = true;
     } else {
       //this.presentLoading();
+      let nis: string = this.nisForm.value.nis;
+      if (nis.length == 8) {
+        nis = nis.substr(0, 4) + "-" + nis.substr(4, 4);
+        this.nisForm.value.nis = nis;
+      }
 
       for (let item of this.csvData) {
         if (item[0] != undefined && item[1] != undefined && item[2] != undefined && item[3] != undefined) {
@@ -78,25 +86,29 @@ export class HomePage implements OnInit {
           this.nisActual = doc;
         });*/
       if (this.nisActual == undefined) {
-        this.respuesta = "NIS no ecnontrado";
-        this.responseColor = "danger";
         this.notFound = true;
       } else {
         this.hasRespuesta = true;
         if (this.nisActual.categoria.includes('BT')) {
           if (this.nisActual.consumo > 500) {
-            this.respuesta = "NIS no exonerado por tener un consumo de " + this.nisActual.consumo.toString() + " kWh";
-            this.responseColor = "danger";
-            this.periodo = "Periodo " + this.nisActual.mes;
+            this.respuestaMovimiento = <MovimientoExoneracion>{
+              movimiento: this.nisActual,
+              color: "danger",
+              exonerado: "NO"
+            };
           } else {
-            this.respuesta = "NIS exonerado por ser cliente en Baja Tension y tener un consumo de " + this.nisActual.consumo.toString() + " kWh"
-            this.responseColor = "success";
-            this.periodo = "Periodo " + this.nisActual.mes;
+            this.respuestaMovimiento = <MovimientoExoneracion>{
+              movimiento: this.nisActual,
+              color: "success",
+              exonerado: "SI"
+            };
           }
         } else {
-          this.respuesta = "NIS no exonerado por no ser cliente en Baja Tension";
-          this.responseColor = "danger";
-          this.periodo = "Periodo " + this.nisActual.mes;
+          this.respuestaMovimiento = <MovimientoExoneracion>{
+            movimiento: this.nisActual,
+            color: "danger",
+            exonerado: "NO"
+          };
         }
       }
       //this.dismissLoading();

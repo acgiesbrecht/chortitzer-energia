@@ -6,3 +6,17 @@ ion-item.nis{
     --border-style: solid;
     --color-focused:  #000000;
 }
+
+.center {
+   width: 144px;
+   height: 144px;
+   position: relative;
+   left: 50%;
+   //top: 50%; 
+   margin-left: -72px;
+   //margin-top: -72px;
+}
+
+.categoria{
+    font-size: 0.7rem;
+ }

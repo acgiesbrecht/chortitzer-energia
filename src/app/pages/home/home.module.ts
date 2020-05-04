@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
-import { NgxMaskIonicModule } from 'ngx-mask-ionic';
 import { HttpModule } from '@angular/http';
 
 @NgModule({
@@ -13,7 +12,6 @@ import { HttpModule } from '@angular/http';
     ReactiveFormsModule,
     FormsModule,
     IonicModule,
-    NgxMaskIonicModule,
     HomePageRoutingModule,
     HttpModule
   ],

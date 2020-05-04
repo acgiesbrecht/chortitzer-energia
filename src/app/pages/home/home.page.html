@@ -8,14 +8,8 @@
 </ion-header>-->
 <ion-content>
   <form [formGroup]="nisForm" (ngSubmit)="buscar()">
+    <ion-img src="../../../assets/icons/icon-512x512.png" class="center"></ion-img>
     <ion-grid>
-      <ion-row class="ion-align-items-center">
-        <ion-col size="3"></ion-col>
-        <ion-col class="ion-img-center" size="6">
-          <ion-img style="width: 144px; height: 144px;" src="../../../assets/icons/icon-512x512.png"></ion-img>
-        </ion-col>
-        <ion-col size="3"></ion-col>
-      </ion-row>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center">
           <ion-text>
@@ -27,10 +21,10 @@
         <ion-col class="ion-text-center" size="2"></ion-col>
         <ion-col class="ion-text-center">
           <ion-label position="floating">NIS (Numero del medidor)</ion-label>
-          <ion-item class="nis" color="secundary">
-            <ion-input formControlName="nis" autofocus="true" minlength="9" maxlength="9" size="9" inputmode="tel"
+          <ion-item class="nis" color="secundary" class="ion-text-center">
+            <ion-input formControlName="nis" autofocus="true" minlength="8" maxlength="9" size="9" inputmode="tel"
               type="text" placeholder="0000-0000" required
-              pattern="([0-9])([0-9])([0-9])([0-9])-([0-9])([0-9])([0-9])([0-9])+">
+              pattern="([0-9])([0-9])([0-9])([0-9])-?([0-9])([0-9])([0-9])([0-9])">
             </ion-input>
           </ion-item>
         </ion-col>
@@ -47,18 +41,48 @@
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
-        <ion-col class="ion-text-center" size="1"></ion-col>
         <ion-col class="ion-text-center">
           <ion-card *ngIf="hasRespuesta">
-            <ion-text color={{responseColor}}>
-              <h3>{{respuesta}}</h3>
-              <h4>{{periodo}}</h4>
-              <h4>Decreto N° 3506/20 Art. 26</h4>
-            </ion-text>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-text>Categoria:
+                    {{respuestaMovimiento.movimiento.categoria.replace("BT", "BAJA TENSION").replace("MT", "MEDIA TENSION")}}
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col><b>Periodo</b></ion-col>
+                <ion-col><b>Consumo</b></ion-col>
+                <ion-col><b>Exonerado</b></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.movimiento.mes}}</ion-text>
+                </ion-col>
+                <ion-col>
+                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.movimiento.consumo}}</ion-text>
+                </ion-col>
+                <ion-col>
+                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.exonerado}}</ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+          <ion-card *ngIf="hasRespuesta">
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col class="ion-text-center">
+                  <ion-text>
+                    Decreto N° 3506/20 Art. 26
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </ion-card>
           <ion-card *ngIf="notFound">
-            <ion-text color={{responseColor}}>
-              <h3>{{respuesta}}</h3>
+            <ion-text color="warning">
+              <h3>NIS no encontrado</h3>
             </ion-text>
           </ion-card>
           <ion-card *ngIf="notValid">
@@ -69,9 +93,16 @@
             </ion-text>
           </ion-card>
         </ion-col>
-        <ion-col class="ion-text-center" size="1"></ion-col>
       </ion-row>
     </ion-grid>
-
   </form>
 </ion-content>
+<ion-footer>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center">
+        <ion-text color="medium" class="categoria">Cooperativa Chortitzer Ltda. - © 2020</ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>
