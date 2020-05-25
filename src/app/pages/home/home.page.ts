@@ -24,8 +24,8 @@ export class HomePage implements OnInit {
   movimientos: Movimiento[];
   csvData: any[] = [];
   headerRow: any[] = [];
-  nisActual: Movimiento;
-  respuestaMovimiento: MovimientoExoneracion;
+  nisActualMovimientos: Movimiento[];
+  respuestaMovimientos: MovimientoExoneracion[];
   hasRespuesta: boolean;
   notFound: boolean;
   notValid: boolean;
@@ -51,8 +51,8 @@ export class HomePage implements OnInit {
 
   buscar() {
     this.notValid = false;
-    this.respuestaMovimiento = undefined;
-    this.nisActual = undefined;
+    this.respuestaMovimientos = undefined;
+    this.nisActualMovimientos = [];
     this.hasRespuesta = false;
     this.notFound = false;
     if (!this.nisForm.valid) {
@@ -68,12 +68,13 @@ export class HomePage implements OnInit {
       for (let item of this.csvData) {
         if (item[0] != undefined && item[1] != undefined && item[2] != undefined && item[3] != undefined) {
           if (item[0] == this.nisForm.value.nis) {
-            this.nisActual = <Movimiento>{
+            let mov = <Movimiento>{
               nis: item[0],
               categoria: item[1],
               consumo: item[2],
               mes: item[3]
             };
+            this.nisActualMovimientos.push(mov);
           }
         }
       }
@@ -85,30 +86,36 @@ export class HomePage implements OnInit {
         d.forEach(doc => {
           this.nisActual = doc;
         });*/
-      if (this.nisActual == undefined) {
+      if (this.nisActualMovimientos == undefined) {
         this.notFound = true;
       } else {
-        this.hasRespuesta = true;
-        if (this.nisActual.categoria.includes('BT')) {
-          if (this.nisActual.consumo > 500) {
-            this.respuestaMovimiento = <MovimientoExoneracion>{
-              movimiento: this.nisActual,
+        this.respuestaMovimientos = [];
+        for (let movimiento of this.nisActualMovimientos) {
+          this.hasRespuesta = true;
+          if (movimiento.categoria.includes('BT')) {
+            if (movimiento.consumo > 500) {
+              let respuestaMovimiento = <MovimientoExoneracion>{
+                movimiento: movimiento,
+                color: "danger",
+                exonerado: "NO"
+              };
+              this.respuestaMovimientos.push(respuestaMovimiento);
+            } else {
+              let respuestaMovimiento = <MovimientoExoneracion>{
+                movimiento: movimiento,
+                color: "success",
+                exonerado: "SI"
+              };
+              this.respuestaMovimientos.push(respuestaMovimiento);
+            }
+          } else {
+            let respuestaMovimiento = <MovimientoExoneracion>{
+              movimiento: movimiento,
               color: "danger",
               exonerado: "NO"
             };
-          } else {
-            this.respuestaMovimiento = <MovimientoExoneracion>{
-              movimiento: this.nisActual,
-              color: "success",
-              exonerado: "SI"
-            };
+            this.respuestaMovimientos.push(respuestaMovimiento);
           }
-        } else {
-          this.respuestaMovimiento = <MovimientoExoneracion>{
-            movimiento: this.nisActual,
-            color: "danger",
-            exonerado: "NO"
-          };
         }
       }
       //this.dismissLoading();

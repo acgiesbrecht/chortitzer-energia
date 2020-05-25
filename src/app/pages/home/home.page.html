@@ -47,7 +47,7 @@
               <ion-row>
                 <ion-col>
                   <ion-text>Categoria:
-                    {{respuestaMovimiento.movimiento.categoria.replace("BT", "BAJA TENSION").replace("MT", "MEDIA TENSION")}}
+                    {{respuestaMovimientos[0].movimiento.categoria.replace("BT", "BAJA TENSION").replace("MT", "MEDIA TENSION")}}
                   </ion-text>
                 </ion-col>
               </ion-row>
@@ -56,15 +56,15 @@
                 <ion-col><b>Consumo</b></ion-col>
                 <ion-col><b>Exonerado</b></ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row *ngFor="let movimiento of respuestaMovimientos">
                 <ion-col>
-                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.movimiento.mes}}</ion-text>
+                  <ion-text color={{movimiento.color}}>{{movimiento.movimiento.mes}}</ion-text>
                 </ion-col>
                 <ion-col>
-                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.movimiento.consumo}}</ion-text>
+                  <ion-text color={{movimiento.color}}>{{movimiento.movimiento.consumo}}</ion-text>
                 </ion-col>
                 <ion-col>
-                  <ion-text color={{respuestaMovimiento.color}}>{{respuestaMovimiento.exonerado}}</ion-text>
+                  <ion-text color={{movimiento.color}}>{{movimiento.exonerado}}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
