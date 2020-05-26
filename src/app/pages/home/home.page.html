@@ -8,7 +8,10 @@
 </ion-header>-->
 <ion-content>
   <form [formGroup]="nisForm" (ngSubmit)="buscar()">
-    <ion-img src="../../../assets/icons/icon-512x512.png" class="center"></ion-img>
+    <ion-img
+      src="../../../assets/icons/icon-512x512.png"
+      class="center"
+    ></ion-img>
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center">
@@ -22,9 +25,18 @@
         <ion-col class="ion-text-center">
           <ion-label position="floating">NIS (Numero del medidor)</ion-label>
           <ion-item class="nis" color="secundary" class="ion-text-center">
-            <ion-input formControlName="nis" autofocus="true" minlength="8" maxlength="9" size="9" inputmode="tel"
-              type="text" placeholder="0000-0000" required
-              pattern="([0-9])([0-9])([0-9])([0-9])-?([0-9])([0-9])([0-9])([0-9])">
+            <ion-input
+              formControlName="nis"
+              autofocus="true"
+              minlength="8"
+              maxlength="9"
+              size="9"
+              inputmode="tel"
+              type="text"
+              placeholder="0000-0000"
+              required
+              pattern="([0-9])([0-9])([0-9])([0-9])-?([0-9])([0-9])([0-9])([0-9])"
+            >
             </ion-input>
           </ion-item>
         </ion-col>
@@ -32,13 +44,13 @@
       </ion-row>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center">
-          <ion-button type="submit" color="secondary" size="large">Buscar</ion-button>
+          <ion-button type="submit" color="secondary" size="large"
+            >Buscar</ion-button
+          >
         </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
-        <ion-col class="ion-text-center">
-
-        </ion-col>
+        <ion-col class="ion-text-center"> </ion-col>
       </ion-row>
       <ion-row class="ion-align-items-center">
         <ion-col class="ion-text-center">
@@ -46,8 +58,10 @@
             <ion-grid>
               <ion-row>
                 <ion-col>
-                  <ion-text>Categoria:
-                    {{respuestaMovimientos[0].movimiento.categoria.replace("BT", "BAJA TENSION").replace("MT", "MEDIA TENSION")}}
+                  <ion-text
+                    >Categoria:
+                    {{respuestaMovimientos[0].movimiento.categoria.replace("BT",
+                    "BAJA TENSION").replace("MT", "MEDIA TENSION")}}
                   </ion-text>
                 </ion-col>
               </ion-row>
@@ -58,13 +72,19 @@
               </ion-row>
               <ion-row *ngFor="let movimiento of respuestaMovimientos">
                 <ion-col>
-                  <ion-text color={{movimiento.color}}>{{movimiento.movimiento.mes}}</ion-text>
+                  <ion-text color="{{movimiento.color}}"
+                    >{{movimiento.movimiento.mes}}</ion-text
+                  >
                 </ion-col>
                 <ion-col>
-                  <ion-text color={{movimiento.color}}>{{movimiento.movimiento.consumo}}</ion-text>
+                  <ion-text color="{{movimiento.color}}"
+                    >{{movimiento.movimiento.consumo}}</ion-text
+                  >
                 </ion-col>
                 <ion-col>
-                  <ion-text color={{movimiento.color}}>{{movimiento.exonerado}}</ion-text>
+                  <ion-text color="{{movimiento.color}}"
+                    >{{movimiento.exonerado}}</ion-text
+                  >
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -88,8 +108,11 @@
           <ion-card *ngIf="notValid">
             <ion-text color="danger">
               <h3>NIS no valido</h3>
-              <h5>Formato requerido: XXXX-XXXX. Si el numero de medidor tiene solo XXX-XXX entonces anteponer un digito
-                segun zona: Zona norte: 0XXX-0XXX y zona sur: 6XXX-0XXX</h5>
+              <h5>
+                Formato requerido: XXXX-XXXX. Si el numero de medidor tiene solo
+                XXX-XXX entonces anteponer un digito segun zona: Zona norte:
+                0XXX-0XXX y zona sur: 6XXX-0XXX
+              </h5>
             </ion-text>
           </ion-card>
         </ion-col>
@@ -101,7 +124,9 @@
   <ion-grid>
     <ion-row class="ion-align-items-center">
       <ion-col class="ion-text-center">
-        <ion-text color="medium" class="categoria">Cooperativa Chortitzer Ltda. - © 2020</ion-text>
+        <ion-text color="medium" class="categoria">
+          Cooperativa Chortitzer Ltda. - © 2020
+        </ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>

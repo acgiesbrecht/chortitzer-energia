@@ -5,11 +5,7 @@
   },
   "hosting": {
     "public": "www",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",
@@ -27,7 +23,7 @@
         ]
       },
       {
-        "source": "ngsw-worker.js",
+        "source": "combined-sw.js",
         "headers": [
           {
             "key": "Cache-Control",
